@@ -44,7 +44,7 @@ class MailboxViewController: UIViewController {
     }
     
     override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
-        if motion == .motionShake {
+        if motion == .motionShake && messageParentView.isHidden == true {
             print("Shaken, not stirred")
             UIView.animate(withDuration: animationDuration, animations: {
                 self.messageParentView.isHidden = false
@@ -75,8 +75,8 @@ class MailboxViewController: UIViewController {
     @IBAction func panOnMessage(_ sender: AnyObject) {
         //panned on message
         let translation = sender.translation(in: messageImage).x
-        let rightOffset: CGFloat! = -80
-        let leftOffset: CGFloat! = 80
+        let rightOffset: CGFloat! = -70
+        let leftOffset: CGFloat! = 70
         let farRightOffset: CGFloat! = -200
         let farLeftOffset: CGFloat! = 200
         
@@ -86,6 +86,9 @@ class MailboxViewController: UIViewController {
             messageX = messageImage.frame.origin.x
             remindX = remindImage.frame.origin.x
             archiveX = archiveImage.frame.origin.x
+            
+            remindImage.alpha = 0
+            archiveImage.alpha = 0
             
         } else if sender.state == .changed {
             messageImage.frame.origin.x = messageX + translation
@@ -99,6 +102,7 @@ class MailboxViewController: UIViewController {
                     self.messageParentView.backgroundColor = #colorLiteral(red: 1, green: 0.8627450466, blue: 0.1411764026, alpha: 1)
                     self.remindImage.frame.origin.x = self.remindX + translation - rightOffset
                     self.remindImage.image! = #imageLiteral(resourceName: "later_icon")
+                    self.remindImage.alpha = 1
                 } else if translation < leftOffset {
                     self.messageParentView.backgroundColor = #colorLiteral(red: 0.7882353663, green: 0.8078430891, blue: 0.8235294223, alpha: 1)
                     self.remindImage.frame.origin.x = self.ogRemindX
@@ -107,6 +111,7 @@ class MailboxViewController: UIViewController {
                     self.messageParentView.backgroundColor = #colorLiteral(red: 0.05490205437, green: 0.6352941394, blue: 0.0941176191, alpha: 1)
                     self.archiveImage.frame.origin.x = self.archiveX + translation - leftOffset
                     self.archiveImage.image = #imageLiteral(resourceName: "archive_icon")
+                    self.archiveImage.alpha = 1
                 } else if translation > farLeftOffset {
                     self.messageParentView.backgroundColor = #colorLiteral(red: 0.8156864047, green: 0.1882352531, blue: 0.1529411376, alpha: 1)
                     self.archiveImage.frame.origin.x = self.archiveX + translation - leftOffset
